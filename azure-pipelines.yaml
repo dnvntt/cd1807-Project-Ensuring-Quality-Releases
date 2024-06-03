@@ -17,7 +17,7 @@ variables:
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
   # Environment name
-  environmentName: 'test'
+  environmentName: 'TEST'
   
   # Web app name
   webAppName: 'myApplication-KhanhService'
@@ -40,7 +40,7 @@ stages:
     
     # Run Terraform Init on the pipeline agent 
     # ToDo: Replace the resource group name, storage account name, and container name below
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+    - task: TerraformTaskV1@0
       displayName: 'Terrafom init'
       inputs:
         provider: 'azurerm'
@@ -52,14 +52,14 @@ stages:
         backendAzureRmContainerName: 'tstate'
         backendAzureRmKey: 'test.terraform.tfstate'
 
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+    - task: TerraformTaskV1@0
       displayName: Terraform validate
       inputs:
         provider: 'azurerm'
         command: 'validate'
     
     # Run Terraform Apply
-    - task: ms-devlabs.custom-terraform-tasks.custom-terraform-release-task.TerraformTaskV3@3
+    - task: TerraformTaskV1@0
       displayName: Terraform apply
       inputs:
         provider: 'azurerm'
@@ -90,7 +90,7 @@ stages:
   - deployment: DeployFakeRestAPI
     displayName: 'Deploy app to custom VM'
     pool:
-      vmImage: ubuntu-20.04
+      myAgentPool
     environment: 'TEST'
     strategy:
       runOnce:
@@ -111,7 +111,7 @@ stages:
   - job: Integration
     displayName: 'Integration Tests'
     pool:
-      vmImage: ubuntu-20.04
+      myAgentPool
     steps:
 
     - task: Bash@3
@@ -147,7 +147,7 @@ stages:
   - job: Performance
     displayName: 'Performance Tests'
     pool:
-      vmImage: 'ubuntu-20.04'
+      myAgentPool
     steps:
 
     - task: JMeterInstaller@0
