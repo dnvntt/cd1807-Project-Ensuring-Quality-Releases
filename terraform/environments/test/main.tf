@@ -7,19 +7,12 @@ provider "azurerm" {
 }
 terraform {
   backend "azurerm" {
-    storage_account_name = "tfstate3052618410"
+    storage_account_name = "tfstate2729010542"
     container_name       = "tfstate"
     key                  = "test.terraform.tfstate"
-    access_key           = "R2b5lPRl0xe8yyD/rvDNiYrdodmnVb+YNJvlQGP7Z45oZsWCSCdqvRxo9hNt1LZHn05CH/5vJ8xZ+AStyvGs+w=="
+    access_key           = "LllPecjTkMdRCtqenZaxshn+mtU+5vIexK6+9QL9+KEFFPTR9ZkkcqR951PwK9LlCzDBcr6SAwi++AStY0/row=="
   }
 }
-/*
-module "resource_group" {
-  source               = "../../modules/resource_group"
-  resource_group       = "${var.resource_group}"
-  location             = "${var.location}"
-}
-*/
 
 module "network" {
   source               = "../../modules/network"
@@ -54,4 +47,16 @@ module "publicip" {
   application_type = "${var.application_type}"
   resource_type    = "publicip"
   resource_group   = "${var.resource_group}"
+}
+module "vm" {
+  source           = "../../modules/vm"
+  location         = "${var.location}"
+  resource_type    = "vm"
+  resource_group   = "${var.resource_group}"
+  admin_username   = "${var.admin_username}"
+  admin_password   = "${var.admin_password}"
+  subnet_id        = "${module.network.subnet_id_test}"
+  public_ip = "${module.publicip.public_ip_address_id}"
+  //public_key       = "${var.public_key}"
+  packer_image     = "${var.packer_image}"
 }
