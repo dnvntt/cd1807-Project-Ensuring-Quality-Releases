@@ -89,7 +89,7 @@ stages:
 - stage: Deploy
   jobs:
   - deployment: DeployFakeRestAPI
-    displayName: 'Deploy app to custom VM'
+    displayName: 'Deploy app to VM'
     pool:
       myAgentPool
     environment: 'TEST'
