@@ -53,6 +53,7 @@ stages:
         backendAzureRmKey: 'test.terraform.tfstate'
         commandOptions: '-reconfigure'
 
+
     - task: TerraformTaskV1@0
       displayName: Terraform validate
       inputs:
