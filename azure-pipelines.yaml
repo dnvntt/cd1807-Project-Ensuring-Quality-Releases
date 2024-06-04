@@ -84,8 +84,7 @@ stages:
       displayName: 'Upload UI Tests definition'
       artifact: drop-ui-tests 
       
-      
-      
+            
 - stage: Deploy
   jobs:
   - deployment: DeployFakeRestAPI
