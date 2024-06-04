@@ -199,7 +199,6 @@ stages:
           ls -lah stress-test-report/
           cat jmeter.log        
 
-   
   #--------------------------------------------#  
   # Selenium | Functional UI Tests
   # ToDo: 
