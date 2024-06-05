@@ -11,11 +11,8 @@ resource "azurerm_linux_web_app" "test" {
   location            = "${var.location}"
   resource_group_name = "${var.resource_group}"
   service_plan_id     = azurerm_service_plan.test.id
-
+  #public_network_access_enabled = true
   app_settings = {
     "WEBSITE_RUN_FROM_PACKAGE" = 0
-  }
-  site_config {
-    always_on = false
   }
 }
