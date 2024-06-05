@@ -105,7 +105,7 @@ stages:
     displayName: 'Deploy app to VM'
     pool:
       myAgentPool
-    #environment: 'TEST'
+    environment: 'TEST'
     strategy:
       runOnce:
         deploy:
@@ -220,8 +220,8 @@ stages:
     displayName: Selenium Tests
     pool:
       myAgentPool
-    #environment:
-      #name:  'TEST'       # ToDo: Change/provide a name
+    environment:
+      name:  'TEST'       # ToDo: Change/provide a name
       #resourceType: VirtualMachine
       #tags: selenium
     strategy:
