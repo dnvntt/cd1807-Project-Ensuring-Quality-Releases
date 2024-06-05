@@ -17,7 +17,7 @@ variables:
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
   # Environment name
-  environmentName: 'TEST'
+  #environmentName: 'TEST'
   
   # Web app name
   webAppName: 'myApplication-KhanhService'
@@ -105,7 +105,7 @@ stages:
     displayName: 'Deploy app to VM'
     pool:
       myAgentPool
-    environment: 'TEST'
+    #environment: 'TEST'
     strategy:
       runOnce:
         deploy:
@@ -218,8 +218,10 @@ stages:
   # ToDo: 
   - deployment: VMDeploy
     displayName: Selenium Tests
-    environment:
-      name:  'TEST'       # ToDo: Change/provide a name
+    pool:
+      myAgentPool
+    #environment:
+      #name:  'TEST'       # ToDo: Change/provide a name
       #resourceType: VirtualMachine
       #tags: selenium
     strategy:
@@ -241,22 +243,21 @@ stages:
                 sudo apt-get install -y chromium-browser
                 pip3 install selenium
                 cd ~/
-                DIR=/home/testuser/app
+                DIR=/home/azureuser/app
                 if [ ! -d "$DIR" ]; then
                     mkdir app
                 fi
-                mv /home/testuser/azagent/_work/1/drop-uitests/$(Build.BuildId)-uitests.zip app
+                mv /home/azureuser/myagent/_work/1/drop-ui-tests/selenium-$(Build.BuildId).zip app
                 cd app
-                unzip -o $(Build.BuildId)-uitests.zip
-                FILE=/home/testuser/app/chromedriver_linux64.zip
+                unzip -o selenium-$(Build.BuildId).zip
+                FILE=/home/azureuser/app/chromedriver_linux64.zip
                 if [ ! -f "$FILE" ]; then
-                    LATEST=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE)
-                    wget http://chromedriver.storage.googleapis.com/$LATEST/chromedriver_linux64.zip
-                    unzip -o chromedriver_linux64.zip
+                    wget https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chromedriver-linux64.zip
+                    unzip -o chromedriver-linux64.zip
                     sudo ln -s $PWD/chromedriver /usr/local/bin/chromedriver
                 fi
-                export PATH=$PATH:/home/testuser/app
+                export PATH=$PATH:/home/azureuser/app
                 echo "Starting Selenium Tests"
-                python3 ../drop-ui-tests/add_remove_from_cart.py >> selenium.log                   
+                python3 add_remove_from_cart.py >> selenium.log                   
                 echo "Completed Selenium Tests. Check selenium.log for results."
                 cat selenium.log
