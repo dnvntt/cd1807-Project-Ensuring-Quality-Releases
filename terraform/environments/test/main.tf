@@ -39,7 +39,7 @@ module "appservice" {
   source           = "../../modules/appservice"
   location         = "${var.location}"
   application_type = "${var.application_type}"
-  resource_type    = "AppService"
+  resource_type    = "KhanhService"
   resource_group   = "${var.resource_group}"
 }
 module "publicip" {
