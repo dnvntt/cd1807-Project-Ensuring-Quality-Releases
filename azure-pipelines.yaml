@@ -96,18 +96,7 @@ stages:
         targetPath: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
         artifactName: 'drop-ui-tests'
         
-    # JMeter (Performance) Test Suite - Archive
-    - task: ArchiveFiles@2
-      displayName: "Archive PerformanceTestSuite"
-      inputs:
-        rootFolderOrFile: "$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/testsuite"
-        includeRootFolder: false
-        archiveType: "zip"
-        archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip"
-    # JMeter Test Suite - Publish
-    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip
-      displayName: "Upload Package"
-      artifact: drop-perftests
+
       
             
 - stage: Deploy
@@ -191,38 +180,36 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          unzip -o $(Build.BuildId)-perftests.zip
           jmeter -n \
-            -t ./EnduranceTestSuite.jmx \
+            -t EnduranceTestSuite.jmx \
             -l endurance-test-report/endurance-results.jtl \
             -e \
             -o endurance-test-report
-        workingDirectory: $(Pipeline.Workspace)/drop-perftests
+        workingDirectory: $(System.DefaultWorkingDirectory)/automatedtesting/jmeter
         
     - task: publishhtmlreport@1
       displayName: 'Publish Endurance Test Results'
       inputs:
         htmlType: 'Jmeter'
-        JmeterReportsPath: '$(Build.SourcesDirectory)/endurance-test-report'    
+        JmeterReportsPath: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/endurance-test-report'    
 
     - task: Bash@3
       displayName: 'Stress Test Suite'
       inputs:
         targetType: 'inline'
         script: |
-          unzip -o $(Build.BuildId)-perftests.zip
           jmeter -n \
-            -t ./StressTestSuite.jmx \
+            -t StressTestSuite.jmx \
             -l stress-test-report/stress-results.jtl \
             -e \
             -o stress-test-report
-        workingDirectory: $(Pipeline.Workspace)/drop-perftests
+        workingDirectory: $(System.DefaultWorkingDirectory)/automatedtesting/jmeter
         
     - task: publishhtmlreport@1
       displayName: 'Publish Stress Test Results'
       inputs:
         htmlType: 'Jmeter'
-        JmeterReportsPath: '$(Build.SourcesDirectory)/stress-test-report'    
+        JmeterReportsPath: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/stress-test-report'    
         
         
     - task: Bash@3
