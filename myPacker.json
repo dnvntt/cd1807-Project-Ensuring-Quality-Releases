@@ -33,8 +33,9 @@
           "python3 -m venv env",
           "pip3 install selenium",
           "wget https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chromedriver-linux64.zip",
-          "unzip chromedriver_linux64.zip",
-          "rm chromedriver_linux64.zip",
+          "unzip -o chromedriver-linux64.zip",
+		  "mv chromedriver-linux64/chromedriver chromedriver",
+          "rm chromedriver-linux64.zip",
           "chown root:root chromedriver",
           "chmod 777 chromedriver"
       ],
