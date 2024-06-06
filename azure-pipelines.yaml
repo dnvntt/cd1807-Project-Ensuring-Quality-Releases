@@ -170,17 +170,16 @@ stages:
       myAgentPool
     steps:
 
-    - task: JMeterInstaller@0
-      displayName: 'Install JMeter 5.2.1'
-      inputs:
-        jmeterVersion: '5.2.1'
     
     - task: Bash@3
       displayName: 'Endurance Test Suite'
       inputs:
         targetType: 'inline'
         script: |
-          jmeter -n \
+          wget -q "https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.tgz"
+          tar -xf apache-jmeter-5.6.3.tgz
+          rm -Rf endurance-test-report
+          ./apache-jmeter-5.6.3/bin/jmeter -n \
             -t EnduranceTestSuite.jmx \
             -l endurance-test-report/endurance-results.jtl \
             -e \
@@ -198,6 +197,7 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
+          rm -Rf stress-test-report
           jmeter -n \
             -t StressTestSuite.jmx \
             -l stress-test-report/stress-results.jtl \
