@@ -96,7 +96,18 @@ stages:
         targetPath: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
         artifactName: 'drop-ui-tests'
         
-    
+    # JMeter (Performance) Test Suite - Archive
+    - task: ArchiveFiles@2
+      displayName: "Archive PerformanceTestSuite"
+      inputs:
+        rootFolderOrFile: "$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/testsuite"
+        includeRootFolder: false
+        archiveType: "zip"
+        archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip"
+    # JMeter Test Suite - Publish
+    - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip
+      displayName: "Upload Package"
+      artifact: drop-perftests
       
             
 - stage: Deploy
@@ -148,6 +159,7 @@ stages:
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
         targetType: 'inline'
         script: 'newman run TestSuite.Regression.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'        
+    
     - task: Bash@3
       displayName: 'Data Validation Tests'
       continueOnError: true
@@ -155,6 +167,7 @@ stages:
         workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
         targetType: 'inline'
         script: 'newman run TestSuite.Data-Validation.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-DataValidation.xml'        
+    
     - task: PublishTestResults@2
       inputs:
         testResultsFormat: 'JUnit'
@@ -178,12 +191,14 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
+          unzip -o $(Build.BuildId)-perftests.zip
           jmeter -n \
-            -t automatedtesting/jmeter/EnduranceTestSuite.jmx \
+            -t ./EnduranceTestSuite.jmx \
             -l endurance-test-report/endurance-results.jtl \
             -e \
             -o endurance-test-report
-
+        workingDirectory: $(Pipeline.Workspace)/drop-perftests
+        
     - task: publishhtmlreport@1
       displayName: 'Publish Endurance Test Results'
       inputs:
@@ -195,12 +210,14 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
+          unzip -o $(Build.BuildId)-perftests.zip
           jmeter -n \
-            -t automatedtesting/jmeter/StressTestSuite.jmx \
+            -t ./StressTestSuite.jmx \
             -l stress-test-report/stress-results.jtl \
             -e \
             -o stress-test-report
-
+        workingDirectory: $(Pipeline.Workspace)/drop-perftests
+        
     - task: publishhtmlreport@1
       displayName: 'Publish Stress Test Results'
       inputs:
