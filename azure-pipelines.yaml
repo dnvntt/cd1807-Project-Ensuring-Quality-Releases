@@ -96,9 +96,18 @@ stages:
         targetPath: '$(Build.ArtifactStagingDirectory)/selenium-$(Build.BuildId).zip'
         artifactName: 'drop-ui-tests'
         
-
-      
-            
+    - task: ArchiveFiles@2
+        displayName: "Archive PerformanceTestSuite"
+        inputs:
+          rootFolderOrFile: "$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/testsuite"
+          includeRootFolder: false
+          archiveType: "zip"
+          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip"
+      # JMeter Test Suite - Publish
+      - publish: $(Build.ArtifactStagingDirectory)/$(Build.BuildId)-perftests.zip
+        displayName: "Upload Package"
+        artifact: 'drop-perftests'  
+        
 - stage: Deploy
   jobs:
   - deployment: DeployFakeRestAPI
@@ -168,14 +177,19 @@ stages:
     displayName: 'Performance Tests'
     pool:
       myAgentPool
-    steps:
-
-    
+    steps:  
     - task: Bash@3
       displayName: 'Endurance Test Suite'
       inputs:
         targetType: 'inline'
         script: |
+          cd ~/        
+          DIR=/home/azureuser/testsuite
+          if [ ! -d "$DIR" ]; then
+            mkdir testsuite
+          fi
+          mv /home/azureuser/myagent/_work/1/drop-perftests/$(Build.BuildId)-perftests.zip testsuite
+          cd testsuite
           wget -q "https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.tgz"
           tar -xf apache-jmeter-5.6.3.tgz
           rm -Rf endurance-test-report
@@ -183,28 +197,31 @@ stages:
             -t EnduranceTestSuite.jmx \
             -l endurance-test-report/endurance-results.jtl \
             -e \
-            -o endurance-test-report
-        workingDirectory: $(System.DefaultWorkingDirectory)/automatedtesting/jmeter
-        
+            -o endurance-test-report              
 
     - task: Bash@3
       displayName: 'Stress Test Suite'
       inputs:
         targetType: 'inline'
-        script: |
+        script: |  
+          cd ~/        
+          DIR=/home/azureuser/testsuite
+          if [ ! -d "$DIR" ]; then
+            mkdir testsuite
+          fi
+          cd testsuite
           rm -Rf stress-test-report
-          jmeter -n \
+          ./apache-jmeter-5.6.3/bin/jmeter -n \
             -t StressTestSuite.jmx \
             -l stress-test-report/stress-results.jtl \
             -e \
-            -o stress-test-report
-        workingDirectory: $(System.DefaultWorkingDirectory)/automatedtesting/jmeter
-        
+            -o stress-test-report    
 
     - task: Bash@3
       displayName: 'Print Performance Test Logs'
       inputs:
         targetType: 'inline'
+        workingDirectory: /home/azureuser/testsuite
         script: |
           ls -lah endurance-test-report/
           ls -lah stress-test-report/
@@ -218,9 +235,7 @@ stages:
     pool:
       myAgentPool
     environment:
-      name:  'TEST'       # ToDo: Change/provide a name
-      #resourceType: VirtualMachine
-      #tags: selenium
+      name:  'TEST'      
     strategy:
       runOnce:
         deploy:
