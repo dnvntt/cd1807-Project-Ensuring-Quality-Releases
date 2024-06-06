@@ -143,14 +143,16 @@ stages:
 
     - task: Bash@3
       displayName: 'Regression Tests'
+      continueOnError: true
       inputs:
-        workingDirectory: 'automatedtesting/postman'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
         targetType: 'inline'
         script: 'newman run TestSuite.Regression.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-Regression.xml'        
     - task: Bash@3
       displayName: 'Data Validation Tests'
+      continueOnError: true
       inputs:
-        workingDirectory: 'automatedtesting/postman'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
         targetType: 'inline'
         script: 'newman run TestSuite.Data-Validation.json -e Test.environment.json --reporters cli,junit --reporter-junit-export TEST-DataValidation.xml'        
     - task: PublishTestResults@2
@@ -158,7 +160,7 @@ stages:
         testResultsFormat: 'JUnit'
         testResultsFiles: '**/TEST-*.xml'
         testRunTitle: 'Publish test results'
-        searchFolder: 'automatedtesting/postman'
+        searchFolder: '$(System.DefaultWorkingDirectory)/automatedtesting/postman'
 
   - job: Performance
     displayName: 'Performance Tests'
