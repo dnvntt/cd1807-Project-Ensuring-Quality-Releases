@@ -16,9 +16,6 @@ variables:
   azureServiceConnectionId: 'myServiceConnection'
   # Project root folder. Point to the folder containing manage.py file.
   projectRoot: $(System.DefaultWorkingDirectory)
-  # Environment name
-  #environmentName: 'TEST'
-  
   # Web app name
   webAppName: 'myApplication-KhanhService'
 
