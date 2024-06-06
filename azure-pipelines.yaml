@@ -186,11 +186,6 @@ stages:
             -o endurance-test-report
         workingDirectory: $(System.DefaultWorkingDirectory)/automatedtesting/jmeter
         
-    - task: publishhtmlreport@1
-      displayName: 'Publish Endurance Test Results'
-      inputs:
-        htmlType: 'Jmeter'
-        JmeterReportsPath: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/endurance-test-report'    
 
     - task: Bash@3
       displayName: 'Stress Test Suite'
@@ -205,13 +200,7 @@ stages:
             -o stress-test-report
         workingDirectory: $(System.DefaultWorkingDirectory)/automatedtesting/jmeter
         
-    - task: publishhtmlreport@1
-      displayName: 'Publish Stress Test Results'
-      inputs:
-        htmlType: 'Jmeter'
-        JmeterReportsPath: '$(System.DefaultWorkingDirectory)/automatedtesting/jmeter/stress-test-report'    
-        
-        
+
     - task: Bash@3
       displayName: 'Print Performance Test Logs'
       inputs:
