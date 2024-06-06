@@ -1,8 +1,8 @@
 {
     "variables": {
-      "client_id": "ec95f3b1-dffb-46f6-9c5e-645b6b95a8a1",
-      "client_secret": "i~78Q~rj~7pa_CEDxy4Isxp6fWEX6oazzJ4qQdxY",
-      "subscription_id": "fe543d6c-d65a-4f94-99e0-886fb95f57dd"
+      "client_id": "5a364677-7f6b-48d7-8cbd-3acc36a7a7c0",
+      "client_secret": "shw8Q~JhV3iq-6KaXoPHDpDDuuDBd8-vOk3WFaZF",
+      "subscription_id": "e7a256dc-769a-421c-9f8e-e283ed3cbefa"
     },
     "builders": [{
       "type": "azure-arm",
@@ -32,7 +32,7 @@
           "apt-get install python3-venv",
           "python3 -m venv env",
           "pip3 install selenium",
-          "wget https://chromedriver.storage.googleapis.com/87.0.4280.88/chromedriver_linux64.zip",
+          "wget https://storage.googleapis.com/chrome-for-testing-public/125.0.6422.141/linux64/chromedriver-linux64.zip",
           "unzip chromedriver_linux64.zip",
           "rm chromedriver_linux64.zip",
           "chown root:root chromedriver",

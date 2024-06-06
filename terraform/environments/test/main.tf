@@ -8,10 +8,10 @@ provider "azurerm" {
 
 terraform {
   backend "azurerm" {
-    storage_account_name = "tfstate1168016874"
+    storage_account_name = "tfstate773713296"
     container_name       = "tfstate"
     key                  = "test.terraform.tfstate"
-    access_key           = "+JWYj11PG3vNx5GVC4GOJZUj5dC2NaL3eCwZ9q7eCQGJ+abKLZyYEuAINAm0EqiAoLWH7+Van+gU+ASt7c4Utg=="
+    access_key           = "+BSzI4ZgsLN9ImTTEgcx3dmP3OtuSa1nz+UOlT+QUi1sRJqVbtymRv9aF/jHnoI6M26m+pN/VBXX+AStjbwYMg=="
   }
 }
 
@@ -39,7 +39,7 @@ module "appservice" {
   source           = "../../modules/appservice"
   location         = "${var.location}"
   application_type = "${var.application_type}"
-  resource_type    = "KhanhService"
+  resource_type    = "AppService"
   resource_group   = "${var.resource_group}"
 }
 module "publicip" {

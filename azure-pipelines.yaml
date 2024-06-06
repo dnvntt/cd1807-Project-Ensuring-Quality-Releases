@@ -48,7 +48,7 @@ stages:
         workingDirectory: '$(System.DefaultWorkingDirectory)/terraform/environments/test'
         backendServiceArm: '$(azureServiceConnectionId)'
         backendAzureRmResourceGroupName: 'Azuredevops'
-        backendAzureRmStorageAccountName: 'tfstate1168016874'
+        backendAzureRmStorageAccountName: 'tfstate773713296'
         backendAzureRmContainerName: 'tfstate'
         backendAzureRmKey: 'test.terraform.tfstate'
         commandOptions: '-reconfigure'
@@ -102,10 +102,11 @@ stages:
 - stage: Deploy
   jobs:
   - deployment: DeployFakeRestAPI
-    displayName: 'Deploy app to VM'
+    displayName: 'Deploy Webapp'
     pool:
       myAgentPool
-    environment: 'TEST'
+    environment:
+        name:  'TEST'
     strategy:
       runOnce:
         deploy:
